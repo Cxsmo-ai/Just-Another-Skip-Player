@@ -80,4 +80,4 @@ jobs:
           app/build/outputs/apk/Just-Player-${{ steps.get_version.outputs.VERSION }}-universal.apk
           app/build/outputs/apk/JASP-${{ steps.get_version.outputs.VERSION }}-universal.apk
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
