@@ -27,19 +27,28 @@ android {
     }
     signingConfigs {
         release {
-            // Using default debug keystore for development/testing
-            // For production, use your own keystore
-            storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
+            // Use debug keystore if available, otherwise skip signing
+            def keystorePath = System.getProperty("user.home") + "/.android/debug.keystore"
+            def keystoreFile = file(keystorePath)
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
         }
     }
     
     buildTypes {
+        debug {
+            // Debug builds are signed automatically
+        }
         release {
             minifyEnabled false
-            signingConfig signingConfigs.release
+            // Use release signing if keystore exists, otherwise use debug
+            signingConfig file(System.getProperty("user.home") + "/.android/debug.keystore").exists() 
+                ? signingConfigs.release 
+                : signingConfigs.debug
             //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
