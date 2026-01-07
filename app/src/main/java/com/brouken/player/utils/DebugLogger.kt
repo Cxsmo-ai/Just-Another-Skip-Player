@@ -89,10 +89,12 @@ object DebugLogger {
             if (dir != null) {
                 logFile = File(dir, FILE_NAME)
                 
-                // Rotate log if too large
-                if (logFile?.exists() == true && logFile!!.length() > MAX_FILE_SIZE_BYTES) {
-                    rotateLog()
-                }
+                // Generate new session ID
+                sessionId = generateSessionId()
+                
+                // CLEAR LOG ON FRESH APP OPEN
+                // This ensures logs reset every time app is fully reopened
+                clearLogFile()
                 
                 // Log session start with device info
                 section(LogTags.APP_START, "SESSION START")
@@ -108,6 +110,19 @@ object DebugLogger {
             }
         } catch (e: Exception) {
             Log.e(LOGCAT_TAG, "Failed to init DebugLogger", e)
+        }
+    }
+    
+    private fun clearLogFile() {
+        try {
+            logFile?.let { file ->
+                if (file.exists()) {
+                    file.delete()
+                }
+                file.createNewFile()
+            }
+        } catch (e: Exception) {
+            Log.e(LOGCAT_TAG, "Failed to clear log file", e)
         }
     }
     
