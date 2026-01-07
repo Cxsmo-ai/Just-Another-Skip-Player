@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modern_overlay_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000"
+    android:clickable="false"
+    android:focusable="false">
+
+    <!-- Scrim - Top -->
+    <View
+        android:id="@+id/modern_scrim_top"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="@drawable/bg_gradient_top"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="top" />
+
+    <!-- Scrim - Bottom -->
+    <View
+        android:id="@+id/modern_scrim_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_gradient_bottom"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/modern_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:clickable="false"
+        android:focusable="false">
+
+        <ImageButton
+            android:id="@+id/modern_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back_24dp"
+            android:contentDescription="Back"
+            android:scaleType="centerInside"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusDown="@id/modern_btn_play" />
+
+        <TextView
+            android:id="@+id/modern_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:shadowColor="#80000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2" />
+            
+        <ImageButton
+            android:id="@+id/modern_btn_cast"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_cast_24dp"
+            android:contentDescription="Cast"
+            android:scaleType="centerInside"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:nextFocusDown="@id/modern_btn_play" 
+            android:nextFocusLeft="@id/modern_btn_back"/>
+
+    </LinearLayout>
+
+    <!-- Center Controls -->
+    <LinearLayout
+        android:id="@+id/modern_center_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:clickable="false"
+        android:focusable="false">
+
+        <ImageButton
+            android:id="@+id/modern_btn_rewind"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_netflix_rewind_10"
+            android:scaleType="fitCenter"
+            android:padding="12dp"
+            android:contentDescription="Rewind 10s"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusRight="@id/modern_btn_play"
+            android:nextFocusUp="@id/modern_btn_back"
+            android:nextFocusDown="@id/modern_time_bar" />
+
+        <FrameLayout
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:clickable="false"
+            android:focusable="false">
+            
+            <ImageButton
+                android:id="@+id/modern_btn_play"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_netflix_button_play"
+                android:scaleType="centerInside"
+                android:padding="20dp"
+                android:src="@drawable/exo_styled_controls_play"
+                android:contentDescription="Play/Pause"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusLeft="@id/modern_btn_rewind"
+                android:nextFocusRight="@id/modern_btn_forward"
+                android:nextFocusUp="@id/modern_btn_back"
+                android:nextFocusDown="@id/modern_time_bar" />
+                
+            <ProgressBar
+                android:id="@+id/modern_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:indeterminateTint="@android:color/white" />
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/modern_btn_forward"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_netflix_forward_10"
+            android:scaleType="fitCenter"
+            android:padding="12dp"
+            android:contentDescription="Forward 10s"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusLeft="@id/modern_btn_play"
+            android:nextFocusUp="@id/modern_btn_back"
+            android:nextFocusDown="@id/modern_time_bar" />
+
+    </LinearLayout>
+    
+    <!-- Skip Intro Button (Netflix Glass Style) -->
+    <Button
+        android:id="@+id/modern_btn_skip_intro"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/bg_skip_button_netflix"
+        android:text="SKIP INTRO"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="8"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:nextFocusUp="@id/modern_btn_forward"
+        android:nextFocusDown="@id/modern_btn_next" />
+
+    <!-- Bottom Controls -->
+    <LinearLayout
+        android:id="@+id/modern_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="24dp"
+        android:clickable="false"
+        android:focusable="false">
+        
+        <!-- Time and Duration Row -->
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp">
+            
+            <TextView
+                android:id="@+id/modern_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:shadowColor="#80000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+                
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+            
+            <TextView
+                android:id="@+id/modern_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:shadowColor="#80000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+        </LinearLayout>
+
+            <!-- TimeBar -->
+        <com.brouken.player.CustomDefaultTimeBar
+            android:id="@+id/modern_time_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:played_color="#E50914"
+            app:scrubber_color="#E50914"
+            app:unplayed_color="#4DFFFFFF"
+            app:buffered_color="#80FFFFFF"
+            app:scrubber_enabled_size="16dp"
+            app:scrubber_dragged_size="20dp"
+            app:bar_height="4dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/modern_btn_play"
+            android:nextFocusDown="@id/modern_btn_file" />
+
+        <!-- Controls Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:clickable="false"
+            android:focusable="false">
+
+            <!-- Speed Button (Text style) -->
+            <TextView
+                android:id="@+id/modern_btn_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="Speed (1x)"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusUp="@id/modern_time_bar"
+                android:nextFocusRight="@id/modern_btn_lock" />
+            
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            
+             <!-- Lock -->
+            <ImageButton
+                    android:id="@+id/modern_btn_lock"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_lock_24dp"
+                    android:contentDescription="Lock"
+                    android:scaleType="centerInside"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/modern_btn_speed"
+                    android:nextFocusUp="@id/modern_time_bar"
+                    android:nextFocusRight="@id/modern_btn_file" />
+
+            <!-- File Selection -->
+             <ImageButton
+                    android:id="@+id/modern_btn_file"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_folder_open_24dp"
+                    android:contentDescription="Open File"
+                    android:scaleType="centerInside"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/modern_btn_lock"
+                    android:nextFocusUp="@id/modern_time_bar"
+                    android:nextFocusRight="@id/modern_btn_subtitle" />
+
+            <!-- Subtitles -->
+            <ImageButton
+                    android:id="@+id/modern_btn_subtitle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_closed_caption_24dp"
+                    android:contentDescription="Subtitles"
+                    android:scaleType="centerInside"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/modern_btn_file"
+                    android:nextFocusUp="@id/modern_time_bar"
+                    android:nextFocusRight="@id/modern_btn_audio" />
+
+            <!-- Audio -->
+            <ImageButton
+                    android:id="@+id/modern_btn_audio"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_volume_up_24dp"
+                    android:contentDescription="Audio"
+                    android:scaleType="centerInside"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/modern_btn_subtitle"
+                    android:nextFocusUp="@id/modern_time_bar"
+                    android:nextFocusRight="@id/modern_btn_settings" />
+                    
+            <!-- Settings (Gear) -->
+             <ImageButton
+                    android:id="@+id/modern_btn_settings"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_settings_24dp"
+                    android:contentDescription="Settings"
+                    android:scaleType="centerInside"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/modern_btn_audio"
+                    android:nextFocusUp="@id/modern_time_bar"
+                    android:nextFocusRight="@id/modern_btn_next" />
+
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+
+            <!-- Next Episode -->
+            <ImageButton
+                android:id="@+id/modern_btn_next"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/exo_styled_controls_next"
+                android:contentDescription="Next"
+                android:scaleType="centerInside"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusLeft="@id/modern_btn_settings"
+                android:nextFocusUp="@id/modern_time_bar" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,179 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
+}
+
+android {
+    namespace 'com.brouken.player'
+    compileSdk = 36
+    ndkVersion '21.4.7075529'
+
+    defaultConfig {
+        def abiFilter = project.findProperty("abiFilter")
+        applicationId "com.brouken.player"
+        minSdkVersion 23
+        targetSdkVersion 36
+        versionCode 202
+        versionName "0.${versionCode}"
+        archivesBaseName = "Just.Player.v${versionName}"
+        if (abiFilter) {
+            def abiCodeMap = ["x86": 1, "x86_64": 2, "armeabi-v7a": 3, "arm64-v8a": 4]
+            versionCode = versionCode * 10 + abiCodeMap[abiFilter]
+            ndk {
+                abiFilters abiFilter
+            }
+        }
+    }
+    signingConfigs {
+        release {
+            // Use debug keystore if available, otherwise skip signing
+            def keystorePath = System.getProperty("user.home") + "/.android/debug.keystore"
+            def keystoreFile = file(keystorePath)
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
+        }
+    }
+    
+    buildTypes {
+        debug {
+            // Debug builds are signed automatically
+        }
+        release {
+            minifyEnabled false
+            // Use release signing if keystore exists, otherwise use debug
+            signingConfig file(System.getProperty("user.home") + "/.android/debug.keystore").exists() 
+                ? signingConfigs.release 
+                : signingConfigs.debug
+            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "brand", "targetSdk", "distribution"
+    productFlavors {
+        // Brand flavors
+        original {
+            dimension "brand"
+            // Keep original package and branding
+        }
+        jasp {
+            dimension "brand"
+            applicationId "com.cxsmo_ai.player"
+            versionNameSuffix "-jasp"
+        }
+        
+        // Target SDK flavors
+        latest {
+            dimension "targetSdk"
+        }
+        legacy {
+            dimension "targetSdk"
+            versionCode = defaultConfig.versionCode + 1_000_000
+            versionNameSuffix "-legacy"
+            targetSdkVersion 29
+        }
+
+        // Distribution flavors
+        universal {
+            dimension "distribution"
+        }
+        amazon {
+            dimension "distribution"
+        }
+        accrescent {
+            dimension "distribution"
+        }
+    }
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        // Ignore legacy builds for amazon/accrescent
+        if (names.contains("legacy") && (names.contains("amazon") || names.contains("accrescent"))) {
+            setIgnore(true)
+        }
+        // Only build latest+universal for JASP to simplify
+        if (names.contains("jasp") && (names.contains("legacy") || names.contains("amazon") || names.contains("accrescent"))) {
+            setIgnore(true)
+        }
+    }
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release" && variant.flavorName == "latestUniversal") {
+            variant.outputs.all { output ->
+                output.outputFileName = "${archivesBaseName}.apk"
+            }
+        }
+        if (variant.buildType.name == "release" && variant.flavorName == "legacyUniversal") {
+            variant.outputs.all { output ->
+                output.outputFileName = "${archivesBaseName}-legacy.apk"
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+    lint {
+        disable 'MissingTranslation'
+        disable 'UnsafeOptInUsageError'
+    }
+    packaging {
+        jniLibs {
+            pickFirsts += ['lib/arm64-v8a/libc++_shared.so', 'lib/armeabi-v7a/libc++_shared.so', 'lib/x86/libc++_shared.so', 'lib/x86_64/libc++_shared.so']
+        }
+    }
+}
+
+dependencies {
+    def media3_version = '1.9.0'
+    def androidxCoreVersion = '1.8.0'
+    implementation "androidx.media3:media3-session:$media3_version"
+    implementation "androidx.media3:media3-datasource:$media3_version"
+    implementation "androidx.media3:media3-decoder:$media3_version"
+    implementation "androidx.media3:media3-common:$media3_version"
+    implementation "androidx.media3:media3-container:$media3_version"
+    implementation "androidx.media3:media3-extractor:$media3_version"
+    implementation("androidx.media3:media3-exoplayer-dash:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
+    }
+    implementation("androidx.media3:media3-exoplayer-hls:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
+    }
+    implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
+    }
+    implementation("androidx.media3:media3-exoplayer-rtsp:$media3_version") {
+        exclude group: "androidx.media3", module: "media3-exoplayer"
+    }
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.3.0'
+    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.sigpwned:chardet4j:77.1.0'
+    implementation project(path: ':doubletapplayerview')
+    implementation project(path: ':android-file-chooser')
+    implementation fileTree(dir: "libs", include: ["lib-*.aar"])
+    
+    // Kotlin & Serialization
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    
+    // LibASS for full SSA/ASS subtitle support (karaoke, vector drawings, fonts)
+    // Using 0.1.0 for Kotlin 1.9 compatibility; exclude transitives to avoid conflicts
+    implementation('io.github.peerless2012:ass-media:0.1.0') {
+        exclude group: 'androidx.media3', module: 'media3-ui'
+        exclude group: 'androidx.media3', module: 'media3-exoplayer'
+    }
+}

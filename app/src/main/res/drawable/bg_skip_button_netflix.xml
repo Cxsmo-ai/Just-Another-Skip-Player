@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow effect -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#20FFFFFF" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <!-- Glassmorphism background -->
+    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#60707070"
+                android:endColor="#40505050"
+                android:angle="135" />
+            <corners android:radius="7dp" />
+            <stroke
+                android:width="1dp"
+                android:color="#50FFFFFF" />
+        </shape>
+    </item>
+    <!-- Inner subtle highlight -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#25FFFFFF"
+                android:endColor="#10FFFFFF"
+                android:angle="90" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</layer-list>
