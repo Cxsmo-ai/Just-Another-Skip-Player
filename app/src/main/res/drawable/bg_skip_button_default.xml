@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <!-- Semi-transparent dark background (Standard Overlay) -->
+    <solid android:color="#99000000" />
+    
+    <!-- No border for Just Player style -->
+    
+    <!-- Rounded corners -->
+    <corners android:radius="4dp" />
+    
+    <!-- Padding inside the button -->
+    <padding
+        android:left="12dp"
+        android:top="6dp"
+        android:right="12dp"
+        android:bottom="6dp" />
+    
+</shape>

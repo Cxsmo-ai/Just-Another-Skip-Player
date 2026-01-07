@@ -1,0 +1,83 @@
+name: Release APKs
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build Release APKs
+      run: |
+        ./gradlew assembleOriginalLatestUniversalRelease
+        ./gradlew assembleJaspLatestUniversalRelease
+        
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Rename APKs
+      run: |
+        mv app/build/outputs/apk/originalLatestUniversal/release/*.apk app/build/outputs/apk/Just-Player-${{ steps.get_version.outputs.VERSION }}-universal.apk
+        mv app/build/outputs/apk/jaspLatestUniversal/release/*.apk app/build/outputs/apk/JASP-${{ steps.get_version.outputs.VERSION }}-universal.apk
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: 🎬 JASP v${{ steps.get_version.outputs.VERSION }}
+        body: |
+          # 🎬 Just Another Skip Player v${{ steps.get_version.outputs.VERSION }}
+          
+          Simple and lightweight, yet polished and powerful Android video player based on ExoPlayer.
+          
+          ## ⬇️ Downloads
+          
+          | APK | Description |
+          |-----|-------------|
+          | **JASP** | Purple icon + JASP branding |
+          | **Just Player** | Classic Just Player branding |
+          
+          > Both versions have **identical features** - only the icon and name differ!
+          
+          ## ✨ Features
+          
+          - 🎯 **5-tier Intro Skip** - AnimeSkip, SkipDB, IntroHater, AniSkip, IntroDB
+          - 📊 **Trakt Scrobbling** - Auto-track your watch history
+          - 🌐 **Remote Web UI** - Submit timestamps from your phone
+          - 🎥 **Format Support** - HEVC, HDR, Dolby Vision, Atmos
+          
+          ## 🔑 Requirements
+          
+          - IntroHater requires your debrid API key (TorBox, Real-Debrid, etc.)
+          - Trakt requires OAuth setup in settings
+          
+          ---
+          
+          <p align="center">
+            <a href="https://discord.gg/njSKPUQtFa">💬 Join Discord</a> •
+            Made with ❤️ by <b>Cxsmo_AI</b>
+          </p>
+        files: |
+          app/build/outputs/apk/Just-Player-${{ steps.get_version.outputs.VERSION }}-universal.apk
+          app/build/outputs/apk/JASP-${{ steps.get_version.outputs.VERSION }}-universal.apk
+        draft: false
+        prerelease: false

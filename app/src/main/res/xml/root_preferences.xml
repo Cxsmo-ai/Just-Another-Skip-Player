@@ -1,0 +1,365 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Player Interface">
+
+        <ListPreference
+            app:key="skipButtonStyle"
+            android:defaultValue="default"
+            app:entries="@array/skip_button_style_entries"
+            app:entryValues="@array/skip_button_style_values"
+            app:title="Player UI Style"
+            app:summary="Switch between Normal and Netflix-style player"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="preferFileNameTitle"
+            app:title="Prefer File Name as Title"
+            app:summary="Show file name instead of app metadata (toggle off for episode info)"
+            app:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Intro Skip">
+
+        <SwitchPreferenceCompat
+            app:key="introSkipEnabled"
+            app:defaultValue="false"
+            app:title="Enable Intro Skip"
+            app:summary="Automatically skip or show button for intros/outros" />
+
+        <ListPreference
+            app:key="introSkipMode"
+            android:defaultValue="button"
+            app:entries="@array/intro_skip_mode_entries"
+            app:entryValues="@array/intro_skip_mode_values"
+            app:title="Skip Mode"
+            app:summary="Choose how to handle intro skipping"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="cinemataUrl"
+            app:title="Cinemeta Addon URL"
+            app:summary="Stremio addon for IMDB lookup (no API key needed)"
+            app:dialogTitle="Cinemeta Addon URL"
+            app:dialogMessage="Default: https://v3-cinemeta.strem.io"
+            android:defaultValue="https://v3-cinemeta.strem.io"
+            android:inputType="textUri"
+            android:singleLine="true" />
+
+
+        <SwitchPreferenceCompat
+            app:key="remoteControlEnabled"
+            app:title="Enable Remote Control"
+            app:summary="Control from browser at http://TV_IP:8355"
+            app:defaultValue="false" />
+
+        <EditTextPreference
+            app:key="introDbApiKey"
+            app:title="IntroDB API Key"
+            app:summary="For submitting intro timestamps (get from introdb.app/account)"
+            app:dialogTitle="IntroDB API Key"
+            app:dialogMessage="Format: idb_..."
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <EditTextPreference
+            app:key="introHaterApiKey"
+            app:title="IntroHater API Key"
+            app:summary="For skip data (get from introhater.com/profile)"
+            app:dialogTitle="IntroHater API Key"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <!-- Jump Scare Skip feature hidden/disabled -->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Format Support">
+
+        <SwitchPreferenceCompat
+            app:key="forceSdrTonemapping"
+            app:title="Force SDR Tonemapping"
+            app:summary="Convert HDR/Dolby Vision to SDR when display doesn't support"
+            app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="immersiveAudioFallback"
+            app:title="Immersive Audio Fallback"
+            app:summary="Auto-downmix Atmos/DTS:X when unsupported"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="auroChannelMapping"
+            app:title="Auro-3D/AuroMax Mapping"
+            app:summary="Map Auro-3D to Dolby Atmos or stereo"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="disableDolbyVision"
+            app:title="Disable Dolby Vision"
+            app:summary="Force fallback to HDR10/SDR for DV content (fixes black screen on some devices)"
+            app:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Trakt"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="traktClientId"
+            app:title="Trakt Client ID"
+            app:summary="From trakt.tv/oauth/applications"
+            app:dialogTitle="Trakt Client ID"
+            app:dialogMessage="Create an app at trakt.tv/oauth/applications"
+            android:inputType="text"
+            android:singleLine="true"
+            app:iconSpaceReserved="false"/>
+
+        <EditTextPreference
+            app:key="traktClientSecret"
+            app:title="Trakt Client Secret"
+            app:summary="Keep this private"
+            app:dialogTitle="Trakt Client Secret"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="traktConnect"
+            app:title="Connect to Trakt"
+            app:summary="Login using device code"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="traktStatus"
+            app:title="Status"
+            app:summary="Not connected"
+            app:enabled="false"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="traktDisconnect"
+            app:title="Disconnect from Trakt"
+            app:summary="Remove Trakt account"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreferenceCompat
+            app:key="traktToastsEnabled"
+            app:title="Show Trakt Notifications"
+            app:summary="Display toast messages for scrobble events"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Anime Skip">
+
+        <Preference
+            app:key="animeSkipLogin"
+            app:title="Login to Anime Skip"
+            app:summary="Login for community timestamps" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipBranding"
+            app:defaultValue="false"
+            app:title="Skip Branding"
+            app:summary="Streaming service logos (disable for pirated sources)" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipRecaps"
+            app:defaultValue="false"
+            app:title="Skip Recaps"
+            app:summary="Episode recaps (disable for pirated sources)" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipTitleCard"
+            app:defaultValue="true"
+            app:title="Skip Title Cards"
+            app:summary="Episode title cards" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipIntros"
+            app:defaultValue="true"
+            app:title="Skip Intros"
+            app:summary="Opening theme songs" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipNewIntros"
+            app:defaultValue="false"
+            app:title="Skip New Intros"
+            app:summary="First appearance of intro" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipMixedIntros"
+            app:defaultValue="false"
+            app:title="Skip Mixed Intros"
+            app:summary="Intros with episode content" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipCanon"
+            app:defaultValue="false"
+            app:title="Skip Canon"
+            app:summary="Canon content (watch by default)" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipFiller"
+            app:defaultValue="true"
+            app:title="Skip Filler"
+            app:summary="Filler episodes/content" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipTransitions"
+            app:defaultValue="true"
+            app:title="Skip Transitions"
+            app:summary="Scene transitions" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipCredits"
+            app:defaultValue="true"
+            app:title="Skip Credits"
+            app:summary="Ending credits" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipNewCredits"
+            app:defaultValue="false"
+            app:title="Skip New Credits"
+            app:summary="First appearance of credits" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipMixedCredits"
+            app:defaultValue="false"
+            app:title="Skip Mixed Credits"
+            app:summary="Credits with episode content" />
+
+        <SwitchPreferenceCompat
+            app:key="animeSkipPreview"
+            app:defaultValue="false"
+            app:title="Skip Previews"
+            app:summary="Next episode previews (off for pirated sources)" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_general_header">
+
+        <ListPreference
+            app:defaultValue="auto"
+            app:entries="@array/file_access_entries"
+            app:entryValues="@array/file_access_values"
+            app:key="fileAccess"
+            app:title="@string/pref_file_access"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:key="languageAudio"
+            android:defaultValue="device"
+            app:title="@string/pref_language_audio"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="frameRateMatching"
+            app:defaultValue="false"
+            app:summaryOn="@string/pref_framerate_matching_on"
+            app:summaryOff="@string/pref_framerate_matching_off"
+            app:title="@string/pref_framerate_matching" />
+
+        <SwitchPreferenceCompat
+            app:key="autoPiP"
+            app:defaultValue="false"
+            app:summaryOn="@string/pref_auto_pip_on"
+            app:summaryOff="@string/pref_auto_pip_off"
+            app:title="@string/pref_auto_pip" />
+
+        <SwitchPreferenceCompat
+            app:key="skipSilence"
+            app:defaultValue="false"
+            app:summaryOn="@string/pref_skip_silence_on"
+            app:summaryOff="@string/pref_skip_silence_off"
+            app:title="@string/pref_skip_silence" />
+
+        <SwitchPreferenceCompat
+            app:key="repeatToggle"
+            app:defaultValue="false"
+            app:summary="@string/pref_repeat_toggle_summary"
+            app:title="@string/pref_repeat_toggle" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_subtitle_header">
+
+        <SwitchPreferenceCompat
+            app:key="subtitleStyleEmbedded"
+            app:defaultValue="true"
+            android:summaryOn="@string/pref_subtitle_style_embedded_on"
+            android:summaryOff="@string/pref_subtitle_style_embedded_off"
+            app:title="@string/pref_subtitle_style_embedded" />
+
+        <SwitchPreferenceCompat
+            app:key="subtitleStyleBold"
+            app:defaultValue="false"
+            android:summaryOn="@string/pref_subtitle_style_bold_on"
+            android:summaryOff="@string/pref_subtitle_style_bold_off"
+            app:title="@string/pref_subtitle_style_bold" />
+
+        <Preference
+            app:title="@string/pref_captioning_preferences">
+            <intent android:action="android.settings.CAPTIONING_SETTINGS" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_dangerous_header">
+
+        <Preference
+            app:selectable="false"
+            app:summary="@string/pref_dangerous_warning" />
+
+        <ListPreference
+            app:defaultValue="1"
+            app:entries="@array/decoder_priority_entries"
+            app:entryValues="@array/decoder_priority_values"
+            app:key="decoderPriority"
+            app:title="@string/pref_decoder_priority"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="tunneling"
+            app:defaultValue="false"
+            app:summary="@string/pref_tunneling_summary"
+            app:title="@string/pref_tunneling" />
+
+        <SwitchPreferenceCompat
+            app:key="mapDV7ToHevc"
+            app:defaultValue="false"
+            app:summaryOn="@string/pref_map_dv7_on"
+            app:summaryOff="@string/pref_map_dv7_off"
+            app:title="@string/pref_map_dv7" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="About">
+
+        <Preference
+            app:key="credits"
+            app:title="Created by Cxsmo_AI"
+            app:summary="Tap to join Discord"
+            app:selectable="true"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="appVersion"
+            app:title="Version"
+            app:summary=""
+            app:enabled="false"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            app:key="github"
+            app:title="GitHub"
+            app:summary="View source code"
+            app:selectable="true"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

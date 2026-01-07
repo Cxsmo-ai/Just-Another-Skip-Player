@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Circular arrow for rewind -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12.5,3C7.81,3 4,6.81 4,11.5H1l3.89,3.89 0.07,0.14L9,11.5H6c0,-3.59 2.91,-6.5 6.5,-6.5s6.5,2.91 6.5,6.5 -2.91,6.5 -6.5,6.5c-1.8,0 -3.43,-0.73 -4.61,-1.91l-1.41,1.41C7.97,19 10.11,20 12.5,20c4.69,0 8.5,-3.81 8.5,-8.5S17.19,3 12.5,3z"/>
+    <!-- "10" text -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10.5,14.5v-5h-1v5h1zM14.5,14.5v-5h-2.5v1h1.5v3h-1.5v1h2.5z"/>
+</vector>
