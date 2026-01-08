@@ -487,6 +487,21 @@ public class PlayerActivity extends Activity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
 
+        // Check for updates on launch (if enabled in settings)
+        boolean autoCheck = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean("autoCheckUpdates", true);
+            
+        if (autoCheck) {
+            com.brouken.player.update.UpdateManager.Companion.getInstance(this).checkOnLaunch(updateInfo -> {
+                if (updateInfo != null && updateInfo.getHasApk()) {
+                    if (!isFinishing()) {
+                        showUpdateDialog(updateInfo);
+                    }
+                }
+                return null;
+            });
+        }
+
         final Intent launchIntent = getIntent();
         final String action = launchIntent.getAction();
         final String type = launchIntent.getType();
@@ -4018,5 +4033,63 @@ public class PlayerActivity extends Activity {
             traktScrobbler.release();
             traktScrobbler = null;
         }
+    }
+
+    private void showUpdateDialog(com.brouken.player.update.UpdateInfo updateInfo) {
+        boolean isTV = getPackageManager().hasSystemFeature("android.software.leanback");
+        
+        if (isTV) {
+            // Show TV fullscreen fragment
+            com.brouken.player.update.UpdateTvFragment tvFragment = 
+                com.brouken.player.update.UpdateTvFragment.Companion.newInstance(
+                    updateInfo,
+                    () -> {
+                        downloadAndInstall(updateInfo);
+                    },
+                    () -> {
+                        getSupportFragmentManager().popBackStack();
+                    }
+                );
+            getSupportFragmentManager()
+                .beginTransaction()
+                .add(android.R.id.content, tvFragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+        } else {
+            // Show mobile bottom sheet
+            com.brouken.player.update.UpdateDialogFragment dialogFragment = 
+                com.brouken.player.update.UpdateDialogFragment.Companion.newInstance(
+                    updateInfo,
+                    () -> {
+                        downloadAndInstall(updateInfo);
+                    },
+                    () -> {
+                        com.brouken.player.update.UpdateManager.Companion.getInstance(this)
+                            .skipVersion(updateInfo.getTagName());
+                    }
+                );
+            dialogFragment.show(getSupportFragmentManager(), "update_dialog");
+        }
+    }
+
+    private void downloadAndInstall(com.brouken.player.update.UpdateInfo updateInfo) {
+        Toast.makeText(this, "Downloading update...", Toast.LENGTH_SHORT).show();
+        
+        com.brouken.player.update.UpdateDownloader downloader = 
+            new com.brouken.player.update.UpdateDownloader(this);
+        
+        downloader.downloadApk(
+            updateInfo,
+            (percent, downloaded, total) -> {
+                // Progress callback
+            },
+            success -> {
+                if (!success) {
+                    runOnUiThread(() -> 
+                        Toast.makeText(this, "Download failed", Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        );
     }
 }

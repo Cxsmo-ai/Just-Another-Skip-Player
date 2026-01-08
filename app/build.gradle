@@ -14,8 +14,8 @@ android {
         applicationId "com.brouken.player"
         minSdkVersion 23
         targetSdkVersion 36
-        versionCode 202
-        versionName "0.${versionCode}"
+        versionCode 10002  // v1.0.2 = 1*10000 + 0*100 + 2
+        versionName "1.0.2"
         archivesBaseName = "Just.Player.v${versionName}"
         if (abiFilter) {
             def abiCodeMap = ["x86": 1, "x86_64": 2, "armeabi-v7a": 3, "arm64-v8a": 4]

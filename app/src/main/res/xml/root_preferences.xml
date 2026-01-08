@@ -370,4 +370,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="App Updates">
+
+        <Preference
+            app:key="checkForUpdates"
+            app:title="Check for Updates"
+            app:summary="Tap to check for new versions"
+            app:selectable="true"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreferenceCompat
+            app:key="autoCheckUpdates"
+            app:title="Auto-check on Launch"
+            app:summary="Notify when updates are available"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

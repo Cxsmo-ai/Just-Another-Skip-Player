@@ -154,6 +154,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             // About Section Handlers
             setupAboutPreferences();
+            
+            // Update Handler
+            setupUpdatePreferences();
         }
 
         private void setupAboutPreferences() {
@@ -209,6 +212,86 @@ public class SettingsActivity extends AppCompatActivity {
                     });
                 }
             }
+        }
+
+        private void setupUpdatePreferences() {
+            Preference checkUpdatesPref = findPreference("checkForUpdates");
+            if (checkUpdatesPref != null) {
+                checkUpdatesPref.setOnPreferenceClickListener(preference -> {
+                    Toast.makeText(requireContext(), "Checking for updates...", Toast.LENGTH_SHORT).show();
+                    
+                    com.brouken.player.update.UpdateManager updateManager = 
+                        com.brouken.player.update.UpdateManager.Companion.getInstance(requireContext());
+                    
+                    updateManager.forceCheck(updateInfo -> {
+                        if (updateInfo != null && updateInfo.getHasApk()) {
+                            showUpdateDialog(updateInfo);
+                        } else {
+                            Toast.makeText(requireContext(), "You're up to date!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return true;
+                });
+            }
+        }
+
+        private void showUpdateDialog(com.brouken.player.update.UpdateInfo updateInfo) {
+            boolean isTV = requireContext().getPackageManager().hasSystemFeature("android.software.leanback");
+            
+            if (isTV) {
+                // Show TV fullscreen fragment
+                com.brouken.player.update.UpdateTvFragment tvFragment = 
+                    com.brouken.player.update.UpdateTvFragment.Companion.newInstance(
+                        updateInfo,
+                        () -> {
+                            // Download and install
+                            downloadAndInstall(updateInfo);
+                        },
+                        () -> {
+                            // Later - dismiss
+                            requireActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    );
+                requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, tvFragment)
+                    .addToBackStack(null)
+                    .commit();
+            } else {
+                // Show mobile bottom sheet
+                com.brouken.player.update.UpdateDialogFragment dialogFragment = 
+                    com.brouken.player.update.UpdateDialogFragment.Companion.newInstance(
+                        updateInfo,
+                        () -> {
+                            downloadAndInstall(updateInfo);
+                        },
+                        () -> {
+                            // Later - mark as skipped
+                            com.brouken.player.update.UpdateManager.Companion.getInstance(requireContext())
+                                .skipVersion(updateInfo.getTagName());
+                        }
+                    );
+                dialogFragment.show(requireActivity().getSupportFragmentManager(), "update_dialog");
+            }
+        }
+
+        private void downloadAndInstall(com.brouken.player.update.UpdateInfo updateInfo) {
+            Toast.makeText(requireContext(), "Downloading update...", Toast.LENGTH_SHORT).show();
+            
+            com.brouken.player.update.UpdateDownloader downloader = 
+                new com.brouken.player.update.UpdateDownloader(requireContext());
+            
+            downloader.downloadApk(
+                updateInfo,
+                (percent, downloaded, total) -> {
+                    // Progress callback - could show progress dialog here
+                },
+                success -> {
+                    if (!success) {
+                        Toast.makeText(requireContext(), "Download failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            );
         }
 
         private void updateAnimeSkipLoginSummary(Preference pref) {
