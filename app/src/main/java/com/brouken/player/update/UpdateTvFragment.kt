@@ -123,28 +123,36 @@ class UpdateTvFragment : Fragment() {
     }
 
     private fun startOrbAnimation(orb: View, duration: Long, dx: Float, dy: Float) {
-        val translateX = ObjectAnimator.ofFloat(orb, "translationX", 0f, dx, 0f, -dx, 0f)
-        val translateY = ObjectAnimator.ofFloat(orb, "translationY", 0f, dy, 0f, -dy, 0f)
+        val translateX = ObjectAnimator.ofFloat(orb, "translationX", 0f, dx, 0f, -dx, 0f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
+        val translateY = ObjectAnimator.ofFloat(orb, "translationY", 0f, dy, 0f, -dy, 0f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
 
         AnimatorSet().apply {
             playTogether(translateX, translateY)
             this.duration = duration
             interpolator = LinearInterpolator()
-            repeatCount = ValueAnimator.INFINITE
             start()
         }
     }
 
     private fun startGlowRingAnimation(ring: View) {
-        val scaleX = ObjectAnimator.ofFloat(ring, "scaleX", 1f, 1.15f, 1f)
-        val scaleY = ObjectAnimator.ofFloat(ring, "scaleY", 1f, 1.15f, 1f)
-        val alpha = ObjectAnimator.ofFloat(ring, "alpha", 0.4f, 0.6f, 0.4f)
+        val scaleX = ObjectAnimator.ofFloat(ring, "scaleX", 1f, 1.15f, 1f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
+        val scaleY = ObjectAnimator.ofFloat(ring, "scaleY", 1f, 1.15f, 1f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
+        val alpha = ObjectAnimator.ofFloat(ring, "alpha", 0.4f, 0.6f, 0.4f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
 
         AnimatorSet().apply {
             playTogether(scaleX, scaleY, alpha)
             duration = 2500
             interpolator = AccelerateDecelerateInterpolator()
-            repeatCount = ValueAnimator.INFINITE
             start()
         }
     }

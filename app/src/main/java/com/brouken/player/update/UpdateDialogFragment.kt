@@ -112,15 +112,20 @@ class UpdateDialogFragment : BottomSheetDialogFragment() {
 
     private fun startIconGlowAnimation(glowView: View) {
         // Pulsing glow effect
-        val scaleX = ObjectAnimator.ofFloat(glowView, "scaleX", 1f, 1.2f, 1f)
-        val scaleY = ObjectAnimator.ofFloat(glowView, "scaleY", 1f, 1.2f, 1f)
-        val alpha = ObjectAnimator.ofFloat(glowView, "alpha", 0.3f, 0.5f, 0.3f)
+        val scaleX = ObjectAnimator.ofFloat(glowView, "scaleX", 1f, 1.2f, 1f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
+        val scaleY = ObjectAnimator.ofFloat(glowView, "scaleY", 1f, 1.2f, 1f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
+        val alpha = ObjectAnimator.ofFloat(glowView, "alpha", 0.3f, 0.5f, 0.3f).apply {
+            repeatCount = ValueAnimator.INFINITE
+        }
 
         AnimatorSet().apply {
             playTogether(scaleX, scaleY, alpha)
             duration = 2000
             interpolator = AccelerateDecelerateInterpolator()
-            repeatCount = ValueAnimator.INFINITE
             start()
         }
     }
