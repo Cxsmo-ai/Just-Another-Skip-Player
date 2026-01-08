@@ -31,4 +31,29 @@
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item> <!-- When focused, line scrolls -->
     </style>
+
+    <!-- Premium Update Bottom Sheet Style -->
+    <style name="UpdateBottomSheetStyle" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#1A1A2E</item>
+        <item name="bottomSheetStyle">@style/UpdateBottomSheetModalStyle</item>
+    </style>
+
+    <style name="UpdateBottomSheetModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="shapeAppearance">@null</item>
+        <item name="shapeAppearanceOverlay">@null</item>
+    </style>
+
+    <!-- Translucent Activity Theme for Update Dialog -->
+    <style name="UpdateActivityTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#80000000</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

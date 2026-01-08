@@ -716,6 +716,12 @@
             android:parentActivityName=".SettingsActivity"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
         
+        <!-- Update Activity for showing premium update dialog -->
+        <activity
+            android:name=".update.UpdateActivity"
+            android:exported="false"
+            android:theme="@style/UpdateActivityTheme" />
+        
         <!-- FileProvider for in-app update APK installation -->
         <provider
             android:name="androidx.core.content.FileProvider"

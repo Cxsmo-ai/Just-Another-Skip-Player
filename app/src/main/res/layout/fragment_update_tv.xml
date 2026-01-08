@@ -1,117 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- Animated Background Gradient -->
+    <View
+        android:id="@+id/backgroundGradient"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_tv_gradient" />
+
+    <!-- Animated Particles/Glow Effects -->
+    <View
+        android:id="@+id/glowOrb1"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="top|start"
+        android:layout_marginTop="-100dp"
+        android:layout_marginStart="-100dp"
+        android:alpha="0.15"
+        android:background="@drawable/bg_glow_orb_purple" />
+
+    <View
+        android:id="@+id/glowOrb2"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="-150dp"
+        android:layout_marginEnd="-150dp"
+        android:alpha="0.1"
+        android:background="@drawable/bg_glow_orb_blue" />
+
+    <!-- Main Content Container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="48dp">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="80dp">
 
-        <!-- Header with logo and app name -->
+        <!-- Left Side - Icon & Branding -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="48dp">
-
-            <ImageView
-                android:id="@+id/app_logo"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/app_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Just Another Skip Player"
-                android:textColor="@android:color/white"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <!-- Main content area -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <!-- Title -->
-            <TextView
+            <!-- Animated Icon Container -->
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Update Available"
-                android:textColor="#888888"
-                android:textSize="24sp"
-                android:layout_marginBottom="8dp" />
+                android:layout_height="wrap_content">
 
-            <!-- Version -->
+                <!-- Pulsing Glow Ring -->
+                <View
+                    android:id="@+id/iconGlowRing"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.4"
+                    android:background="@drawable/bg_glow_ring" />
+
+                <!-- App Icon -->
+                <ImageView
+                    android:id="@+id/appIcon"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_launcher" />
+            </FrameLayout>
+
+            <!-- App Name -->
             <TextView
-                android:id="@+id/version_new"
+                android:id="@+id/appNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Version 1.0.3"
-                android:textColor="@android:color/white"
-                android:textSize="48sp"
+                android:layout_marginTop="24dp"
+                android:text="Just Another Skip Player"
+                android:textColor="#FFFFFF"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
+            <!-- Update Badge -->
             <TextView
-                android:id="@+id/version_current"
+                android:id="@+id/updateBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You have 1.0.2"
-                android:textColor="#666666"
-                android:textSize="20sp"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_update_badge"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp"
+                android:text="🚀 UPDATE AVAILABLE"
+                android:textColor="#10B981"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <!-- Changelog -->
-            <TextView
-                android:id="@+id/changelog"
+        <!-- Right Side - Update Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tv_card"
+            android:orientation="vertical"
+            android:padding="40dp">
+
+            <!-- Version Comparison -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Performance improvements\n• Bug fixes\n• New features"
-                android:textColor="#AAAAAA"
-                android:textSize="20sp"
-                android:lineSpacingExtra="8dp" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Current Version -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT"
+                        android:textColor="#6B7280"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/currentVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="v1.0.2"
+                        android:textColor="#9CA3AF"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Arrow Animation -->
+                <ImageView
+                    android:id="@+id/arrowIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:src="@android:drawable/ic_media_ff"
+                    android:tint="#6366F1" />
+
+                <!-- New Version -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NEW"
+                        android:textColor="#10B981"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/newVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="v1.0.3"
+                        android:textColor="#FFFFFF"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="24dp"
+                android:background="#374151" />
+
+            <!-- What's New -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="What's New"
+                android:textColor="#9CA3AF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Changelog -->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <TextView
+                    android:id="@+id/changelogText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.5"
+                    android:text="• Bug fixes and improvements"
+                    android:textColor="#D1D5DB"
+                    android:textSize="18sp" />
+            </ScrollView>
+
+            <!-- File Size -->
+            <TextView
+                android:id="@+id/fileSizeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="📦 25 MB"
+                android:textColor="#6B7280"
+                android:textSize="14sp" />
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Later Button -->
+                <Button
+                    android:id="@+id/laterButton"
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_tv_button_outline"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="Later"
+                    android:textAllCaps="false"
+                    android:textColor="#9CA3AF"
+                    android:textSize="18sp" />
+
+                <!-- Update Button -->
+                <Button
+                    android:id="@+id/updateButton"
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_tv_button_gradient"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="Update Now"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-
-        <!-- Buttons at bottom -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="start"
-            android:layout_marginTop="32dp">
-
-            <Button
-                android:id="@+id/btn_later"
-                android:layout_width="200dp"
-                android:layout_height="64dp"
-                android:text="Later"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/bg_button_outline"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
-
-            <Button
-                android:id="@+id/btn_update"
-                android:layout_width="250dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="24dp"
-                android:text="Update Now"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#9C27B0"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
-        </LinearLayout>
-
     </LinearLayout>
-
 </FrameLayout>

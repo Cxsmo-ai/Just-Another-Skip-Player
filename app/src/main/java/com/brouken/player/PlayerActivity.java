@@ -4035,42 +4035,7 @@ public class PlayerActivity extends Activity {
     }
 
     private void showUpdateDialog(com.brouken.player.update.UpdateInfo updateInfo) {
-        // Use AlertDialog since PlayerActivity extends Activity, not AppCompatActivity
-        new AlertDialog.Builder(this)
-            .setTitle("Update Available")
-            .setMessage("Version " + updateInfo.getVersionString() + " is available.\n\n" + 
-                        "Current: " + BuildConfig.VERSION_NAME + "\n\n" +
-                        updateInfo.getChangelog())
-            .setPositiveButton("Update", (dialog, which) -> {
-                downloadAndInstall(updateInfo);
-            })
-            .setNegativeButton("Later", (dialog, which) -> {
-                com.brouken.player.update.UpdateManager.Companion.getInstance(this)
-                    .skipVersion(updateInfo.getTagName());
-                dialog.dismiss();
-            })
-            .setCancelable(true)
-            .show();
-    }
-
-    private void downloadAndInstall(com.brouken.player.update.UpdateInfo updateInfo) {
-        Toast.makeText(this, "Downloading update...", Toast.LENGTH_SHORT).show();
-        
-        com.brouken.player.update.UpdateDownloader downloader = 
-            new com.brouken.player.update.UpdateDownloader(this);
-        
-        downloader.downloadApk(
-            updateInfo,
-            (percent, downloaded, total) -> {
-                // Progress callback
-            },
-            success -> {
-                if (!success) {
-                    runOnUiThread(() -> 
-                        Toast.makeText(this, "Download failed", Toast.LENGTH_SHORT).show()
-                    );
-                }
-            }
-        );
+        // Launch premium animated update activity
+        com.brouken.player.update.UpdateActivity.Companion.launch(this, updateInfo);
     }
 }

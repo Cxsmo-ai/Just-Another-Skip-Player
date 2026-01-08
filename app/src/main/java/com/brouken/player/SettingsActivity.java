@@ -236,41 +236,8 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void showUpdateDialog(com.brouken.player.update.UpdateInfo updateInfo) {
-            // Use AlertDialog for simplicity and consistency
-            new AlertDialog.Builder(requireContext())
-                .setTitle("Update Available")
-                .setMessage("Version " + updateInfo.getVersionString() + " is available.\n\n" + 
-                            "Current: " + BuildConfig.VERSION_NAME + "\n\n" +
-                            updateInfo.getChangelog())
-                .setPositiveButton("Update", (dialog, which) -> {
-                    downloadAndInstall(updateInfo);
-                })
-                .setNegativeButton("Later", (dialog, which) -> {
-                    com.brouken.player.update.UpdateManager.Companion.getInstance(requireContext())
-                        .skipVersion(updateInfo.getTagName());
-                    dialog.dismiss();
-                })
-                .setCancelable(true)
-                .show();
-        }
-
-        private void downloadAndInstall(com.brouken.player.update.UpdateInfo updateInfo) {
-            Toast.makeText(requireContext(), "Downloading update...", Toast.LENGTH_SHORT).show();
-            
-            com.brouken.player.update.UpdateDownloader downloader = 
-                new com.brouken.player.update.UpdateDownloader(requireContext());
-            
-            downloader.downloadApk(
-                updateInfo,
-                (percent, downloaded, total) -> {
-                    // Progress callback - could show progress dialog here
-                },
-                success -> {
-                    if (!success) {
-                        Toast.makeText(requireContext(), "Download failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            );
+            // Launch premium animated update activity
+            com.brouken.player.update.UpdateActivity.Companion.launch(requireContext(), updateInfo);
         }
 
         private void updateAnimeSkipLoginSummary(Preference pref) {
