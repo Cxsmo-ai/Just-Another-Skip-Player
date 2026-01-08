@@ -1,0 +1,127 @@
+﻿To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :android-file-chooser:preBuild UP-TO-DATE
+> Task :android-file-chooser:preDebugBuild UP-TO-DATE
+> Task :android-file-chooser:generateDebugResValues
+> Task :android-file-chooser:generateDebugResources
+> Task :android-file-chooser:packageDebugResources
+> Task :android-file-chooser:processDebugNavigationResources
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preJaspLatestUniversalDebugBuild UP-TO-DATE
+> Task :android-file-chooser:javaPreCompileDebug
+> Task :app:generateJaspLatestUniversalDebugBuildConfig
+> Task :doubletapplayerview:preBuild UP-TO-DATE
+> Task :doubletapplayerview:preDebugBuild UP-TO-DATE
+> Task :android-file-chooser:writeDebugAarMetadata
+> Task :doubletapplayerview:writeDebugAarMetadata
+> Task :doubletapplayerview:processDebugNavigationResources
+> Task :android-file-chooser:parseDebugLocalResources
+> Task :android-file-chooser:compileDebugLibraryResources
+> Task :app:checkJaspLatestUniversalDebugAarMetadata
+> Task :app:processJaspLatestUniversalDebugNavigationResources
+> Task :app:generateJaspLatestUniversalDebugResValues
+> Task :doubletapplayerview:generateDebugResValues
+> Task :app:compileJaspLatestUniversalDebugNavigationResources
+> Task :doubletapplayerview:generateDebugResources
+> Task :android-file-chooser:generateDebugRFile
+> Task :doubletapplayerview:packageDebugResources
+
+> Task :android-file-chooser:compileDebugJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Use Java toolchain with a lower language version
+    2. Set a higher source/target version
+    3. Use a lower version of the JDK running the build (if you're not using Java toolchain)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+To suppress this warning, set android.javaCompile.suppressSourceTargetDeprecationWarning=true in gradle.properties.
+.\gradlew : warning: [options] source value 8 is obsolete and will be removed in a future 
+release
+At line:1 char:1
++ .\gradlew :app:compileJaspLatestUniversalDebugKotlin --rerun-tasks -- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: [optio... future release:String) [] 
+   , RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: E:\Stremio RPC ATV\Player\android-file-chooser\src\main\java\com\obsez\android\lib\f
+ilechooser\internals\FileUtil.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 warnings
+
+> Task :app:mapJaspLatestUniversalDebugSourceSetPaths
+> Task :android-file-chooser:bundleLibCompileToJarDebug
+> Task :app:generateJaspLatestUniversalDebugResources
+> Task :app:createJaspLatestUniversalDebugCompatibleScreenManifests
+> Task :android-file-chooser:extractDeepLinksDebug
+> Task :app:extractDeepLinksJaspLatestUniversalDebug
+> Task :doubletapplayerview:extractDeepLinksDebug
+> Task :doubletapplayerview:javaPreCompileDebug
+> Task :doubletapplayerview:compileDebugLibraryResources
+> Task :doubletapplayerview:parseDebugLocalResources
+> Task :doubletapplayerview:generateDebugRFile
+> Task :doubletapplayerview:compileDebugJavaWithJavac NO-SOURCE
+> Task :doubletapplayerview:bundleLibCompileToJarDebug
+> Task :android-file-chooser:processDebugManifest
+> Task :doubletapplayerview:processDebugManifest
+> Task :app:mergeJaspLatestUniversalDebugResources
+> Task :app:processJaspLatestUniversalDebugMainManifest
+> Task :app:processJaspLatestUniversalDebugManifest
+> Task :app:processJaspLatestUniversalDebugManifestForPackage
+> Task :app:processJaspLatestUniversalDebugResources
+
+> Task :app:compileJaspLatestUniversalDebugKotlin
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/FormatSupportManager.kt:70:46 'getter for supportedHdrTypes: IntArray!' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/FormatSupportManager.kt:94:32 'getter for supportedHdrTypes: IntArray!' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/FormatSupportManager.kt:275:9 Parameter 'auroChannelMapping' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/tmdb/JumpScareManager.kt:96:30 Condition 'player != null' is always 'true'
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/tmdb/SkipManager.kt:277:40 Parameter 'season' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/tonemap/TonemapProcessor.kt:84:41 'getter for supportedHdrTypes: IntArray!' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/tonemap/TonemapProcessor.kt:113:40 Parameter 'staticInfo' is never used, could be renamed to _
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/trakt/TraktAuthManager.kt:191:9 Parameter 'currentAccessToken' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/trakt/TraktScrobbleManager.kt:291:36 Parameter 'initialProgress' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/PacmanLoadingView.kt:49:51 'scaledDensity: Float' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleAdapter.kt:257:30 Parameter 'icon' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleAdapter.kt:257:44 Parameter 'label' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleAddonsActivity.kt:193:42 'getter for adapterPosition: Int' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleAddonsActivity.kt:194:36 'getter for adapterPosition: Int' is deprecated. Deprecated in Java
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleAddonsActivity.kt:290:27 Parameter 'addon' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/ui/subtitle/SubtitleHub.kt:424:39 Parameter 'track' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/DebugLogger.kt:207:17 Parameter 'tag' is never used
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:86:20 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:87:22 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:88:23 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:93:24 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:94:26 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:95:27 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:101:28 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:102:31 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:110:32 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:111:35 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:119:49 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:120:47 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:128:44 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:152:34 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameCleaner.kt:156:24 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:15:24 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:16:26 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:17:27 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:25:25 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:26:26 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/NameFixer.kt:27:27 Unsafe use of a nullable receiver of type String?
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/RemoteServer.kt:39:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+w: file:///E:/Stremio%20RPC%20ATV/Player/app/src/main/java/com/brouken/player/utils/RemoteServer.kt:65:9 This is a delicate API and its use requires care. Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.
+
+[Incubating] Problems report is available at: file:///E:/Stremio%20RPC%20ATV/Player/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 43s
+40 actionable tasks: 40 executed

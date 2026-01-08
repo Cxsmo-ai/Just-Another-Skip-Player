@@ -709,6 +709,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.subtitle.SubtitleAddonsActivity"
+            android:label="Subtitle Addons"
+            android:parentActivityName=".SettingsActivity"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
     </application>
 
 </manifest>

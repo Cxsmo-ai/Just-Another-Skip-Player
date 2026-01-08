@@ -127,6 +127,9 @@ import com.brouken.player.utils.DebugLogger;
 import com.brouken.player.utils.ChapterScanner;
 import com.brouken.player.utils.NameFixer;
 import com.brouken.player.trakt.TraktScrobbleManager;
+import com.brouken.player.ui.subtitle.SubtitleHub;
+import com.brouken.player.stremio.SubtitleTrack;
+import com.brouken.player.stremio.SubtitleSource;
 import kotlin.Pair;
 
 public class PlayerActivity extends Activity {
@@ -259,6 +262,12 @@ public class PlayerActivity extends Activity {
     
     // Trakt Scrobbling
     private TraktScrobbleManager traktScrobbler;
+    
+    // Ultimate Subtitle Hub
+    private SubtitleHub subtitleHub;
+    
+    // Subtitle button reference (to keep it always enabled)
+    private View exoSubtitleButton;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -509,6 +518,15 @@ public class PlayerActivity extends Activity {
                         apiAccessPartial = true;
                     }
                     apiTitle = bundle.getString(API_TITLE);
+                    
+                    if (bundle.containsKey("imdbId")) {
+                        currentImdbId = bundle.getString("imdbId");
+                    } else if (bundle.containsKey("imdb_id")) {
+                        currentImdbId = bundle.getString("imdb_id");
+                    } else if (bundle.containsKey("code")) {
+                        // Some players use 'code' for IMDB ID
+                        currentImdbId = bundle.getString("code");
+                    }
                 }
 
                 mPrefs.updateMedia(this, uri, type);
@@ -547,6 +565,12 @@ public class PlayerActivity extends Activity {
                 }
             }
             focusPlay = true;
+        }
+
+        Uri currentUri = getIntent().getData();
+        if (currentImdbId == null && currentUri != null && currentUri.isHierarchical()) {
+            currentImdbId = currentUri.getQueryParameter("imdbId");
+            if (currentImdbId == null) currentImdbId = currentUri.getQueryParameter("imdb_id");
         }
 
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
@@ -848,11 +872,11 @@ public class PlayerActivity extends Activity {
 
         // Control bar setup - skip if Netflix layout (uses different control structure)
         final ViewGroup exoBasicControls = playerView.findViewById(R.id.exo_basic_controls);
-        View exoSubtitle = null;
         View exoRepeat = null;
         
         if (exoBasicControls != null) {
-            exoSubtitle = exoBasicControls.findViewById(R.id.exo_subtitle);
+            // Remove ExoPlayer's subtitle button entirely - we'll use our own
+            View exoSubtitle = exoBasicControls.findViewById(R.id.exo_subtitle);
             if (exoSubtitle != null) {
                 exoBasicControls.removeView(exoSubtitle);
             }
@@ -875,14 +899,16 @@ public class PlayerActivity extends Activity {
             }
         }
 
-        if (exoSubtitle != null) {
-            final View finalExoSubtitle = exoSubtitle;
-            finalExoSubtitle.setOnLongClickListener(v -> {
-                enableRotation();
-                safelyStartActivityForResult(new Intent(Settings.ACTION_CAPTIONING_SETTINGS), REQUEST_SYSTEM_CAPTIONS);
-                return true;
-            });
-        }
+        // Create custom subtitle button (always enabled, not managed by ExoPlayer)
+        ImageButton buttonSubtitle = new ImageButton(this, null, 0, R.style.ExoStyledControls_Button_Bottom);
+        buttonSubtitle.setImageResource(R.drawable.ic_subtitles_24dp);
+        buttonSubtitle.setContentDescription(getString(R.string.button_subtitles));
+        buttonSubtitle.setOnClickListener(v -> showSubtitleSelectionDialog());
+        buttonSubtitle.setOnLongClickListener(v -> {
+            enableRotation();
+            safelyStartActivityForResult(new Intent(Settings.ACTION_CAPTIONING_SETTINGS), REQUEST_SYSTEM_CAPTIONS);
+            return true;
+        });
 
         updateButtons(false);
 
@@ -900,7 +926,7 @@ public class PlayerActivity extends Activity {
             }
 
             controls.addView(buttonOpen);
-            if (exoSubtitle != null) controls.addView(exoSubtitle);
+            controls.addView(buttonSubtitle);  // Our custom always-enabled subtitle button
             controls.addView(buttonAspectRatio);
             if (Utils.isPiPSupported(this) && buttonPiP != null) {
                 controls.addView(buttonPiP);
@@ -2145,6 +2171,9 @@ public class PlayerActivity extends Activity {
                     if (!apiAccess) {
                         setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
                     }
+                    
+                    // Force subtitle button enabled after ExoPlayer updates tracks
+                    forceSubtitleButtonEnabled();
                 }
             } else if (state == Player.STATE_ENDED) {
                 playbackFinished = true;
@@ -2838,6 +2867,20 @@ public class PlayerActivity extends Activity {
         } else {
             Utils.setButtonEnabled(this, exoSettings, enable);
         }
+        // Always keep subtitle button enabled for accessing addon subtitles
+        forceSubtitleButtonEnabled();
+    }
+    
+    /**
+     * Force the subtitle button to always be enabled/clickable.
+     * ExoPlayer's PlayerControlView normally disables it when no text tracks exist,
+     * but we want users to always be able to access addon subtitles.
+     */
+    private void forceSubtitleButtonEnabled() {
+        if (exoSubtitleButton != null) {
+            exoSubtitleButton.setEnabled(true);
+            exoSubtitleButton.setAlpha(1.0f);
+        }
     }
 
     private void scaleStart() {
@@ -3003,24 +3046,23 @@ public class PlayerActivity extends Activity {
     }
 
     public void showSubtitleSelectionDialog() {
+        // REVERTED: Using ExoPlayer's default subtitle track selection
+        // (SubtitleHub and online subtitle addons disabled)
+        
         if (player == null) {
-            Utils.showToast(this, "Player not ready");
+            Toast.makeText(this, "Player not ready", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Tracks tracks = player.getCurrentTracks();
-        List<String> textTrackNames = new ArrayList<>();
-        List<TrackGroup> textTrackGroups = new ArrayList<>();
-        List<Integer> textTrackIndices = new ArrayList<>();
+        List<String> subtitleTrackNames = new ArrayList<>();
+        List<TrackGroup> subtitleTrackGroups = new ArrayList<>();
+        List<Integer> subtitleTrackIndices = new ArrayList<>();
 
-        // Add "None" and "External" option
-        textTrackNames.add("None");
-        textTrackGroups.add(null);
-        textTrackIndices.add(-1);
-
-        textTrackNames.add("Load External Subtitle");
-        textTrackGroups.add(null);
-        textTrackIndices.add(-2); // Special index for external
+        // Add "Off" option first
+        subtitleTrackNames.add("🚫 OFF - No Subtitles");
+        subtitleTrackGroups.add(null);
+        subtitleTrackIndices.add(-1);
 
         for (Tracks.Group trackGroup : tracks.getGroups()) {
             if (trackGroup.getType() == C.TRACK_TYPE_TEXT) {
@@ -3030,47 +3072,55 @@ public class PlayerActivity extends Activity {
                     String language = format.language;
                     String name = "";
                     
-                    if (label != null && !label.isEmpty()) {
-                        name = label;
-                    } else if (language != null && !language.isEmpty()) {
+                    // Build display name
+                    if (language != null && !language.isEmpty()) {
                         Locale locale = new Locale(language);
                         name = locale.getDisplayLanguage();
+                    } else if (label != null && !label.isEmpty()) {
+                        name = label;
                     } else {
-                        name = "Subtitle Track " + (textTrackNames.size());
+                        name = "Subtitle Track " + (subtitleTrackNames.size());
                     }
                     
+                    // Add format info
+                    if (label != null && !label.isEmpty() && !name.equals(label)) {
+                        name += " [" + label + "]";
+                    }
+                    
+                    // Mark if selected
                     if (trackGroup.isTrackSelected(i)) {
                         name += " ✓";
                     }
                     
-                    textTrackNames.add(name);
-                    textTrackGroups.add(trackGroup.getMediaTrackGroup());
-                    textTrackIndices.add(i);
+                    subtitleTrackNames.add(name);
+                    subtitleTrackGroups.add(trackGroup.getMediaTrackGroup());
+                    subtitleTrackIndices.add(i);
                 }
             }
         }
 
-        if (textTrackNames.size() <= 1 && textTrackNames.size() > 0) {
-             Utils.showToast(this, "No valid subtitles available");
+        if (subtitleTrackNames.size() <= 1) {
+            Toast.makeText(this, "No subtitle tracks available", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        String[] items = textTrackNames.toArray(new String[0]);
+        String[] items = subtitleTrackNames.toArray(new String[0]);
         
         new AlertDialog.Builder(this)
-                .setTitle("Select Subtitle")
+                .setTitle("Select Subtitle Track")
                 .setItems(items, (dialog, which) -> {
-                    if (which == 0) { // None
+                    if (which == 0) {
+                        // "Off" selected - disable subtitles
                         TrackSelectionParameters params = player.getTrackSelectionParameters()
                                 .buildUpon()
                                 .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
                                 .build();
                         player.setTrackSelectionParameters(params);
                         Utils.showToast(this, "Subtitles Disabled");
-                    } else if (textTrackIndices.get(which) == -2) { // External
-                        loadSubtitleFile(null);
                     } else {
-                        TrackGroup selectedGroup = textTrackGroups.get(which);
-                        int selectedIndex = textTrackIndices.get(which);
+                        // Select specific track
+                        TrackGroup selectedGroup = subtitleTrackGroups.get(which);
+                        int selectedIndex = subtitleTrackIndices.get(which);
                         
                         TrackSelectionParameters params = player.getTrackSelectionParameters()
                                 .buildUpon()
@@ -3079,12 +3129,180 @@ public class PlayerActivity extends Activity {
                                         new TrackSelectionOverride(selectedGroup, Collections.singletonList(selectedIndex))
                                 )
                                 .build();
+                        
                         player.setTrackSelectionParameters(params);
-                        Utils.showToast(this, "Selected: " + textTrackNames.get(which).replace(" ✓", ""));
+                        Utils.showToast(this, "Selected: " + subtitleTrackNames.get(which).replace(" ✓", ""));
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+    
+    /**
+     * Get embedded subtitle tracks from current media
+     */
+    private List<SubtitleTrack> getEmbeddedSubtitleTracks() {
+        List<SubtitleTrack> tracks = new ArrayList<>();
+        if (player == null) return tracks;
+        
+        Tracks currentTracks = player.getCurrentTracks();
+        int index = 0;
+        
+        for (Tracks.Group trackGroup : currentTracks.getGroups()) {
+            if (trackGroup.getType() == C.TRACK_TYPE_TEXT) {
+                for (int i = 0; i < trackGroup.length; i++) {
+                    Format format = trackGroup.getTrackFormat(i);
+                    
+                    String language = "Unknown";
+                    String languageCode = "";
+                    if (format.language != null && !format.language.isEmpty()) {
+                        languageCode = format.language;
+                        Locale locale = new Locale(format.language);
+                        language = locale.getDisplayLanguage();
+                    }
+                    
+                    String label = format.label;
+                    boolean isSelected = trackGroup.isTrackSelected(i);
+                    boolean isForced = (format.selectionFlags & C.SELECTION_FLAG_FORCED) != 0;
+                    boolean isSDH = (format.roleFlags & C.ROLE_FLAG_DESCRIBES_VIDEO) != 0 ||
+                                   (format.roleFlags & C.ROLE_FLAG_DESCRIBES_MUSIC_AND_SOUND) != 0 ||
+                                   (label != null && label.toLowerCase().contains("sdh"));
+                    
+                    String trackId = "embedded_" + index;
+                    
+                    SubtitleTrack track = SubtitleTrack.createEmbedded(
+                        trackId,
+                        language,
+                        languageCode,
+                        label,
+                        format.sampleMimeType,
+                        index,
+                        isSDH,
+                        isForced
+                    );
+                    
+                    tracks.add(track);
+                    index++;
+                }
+            }
+        }
+        
+        return tracks;
+    }
+    
+    /**
+     * Get current subtitle track ID
+     */
+    private String getCurrentSubtitleTrackId() {
+        if (player == null) return null;
+        
+        Tracks currentTracks = player.getCurrentTracks();
+        int index = 0;
+        
+        for (Tracks.Group trackGroup : currentTracks.getGroups()) {
+            if (trackGroup.getType() == C.TRACK_TYPE_TEXT) {
+                for (int i = 0; i < trackGroup.length; i++) {
+                    if (trackGroup.isTrackSelected(i)) {
+                        return "embedded_" + index;
+                    }
+                    index++;
+                }
+            }
+        }
+        
+        return null; // No subtitle selected
+    }
+    
+    /**
+     * Apply a remote subtitle URL to the player
+     */
+    private void applyRemoteSubtitle(SubtitleTrack track) {
+        if (player == null || track.getUrl() == null) return;
+        
+        // Build subtitle configuration
+        String mimeType = track.getMimeType();
+        if (mimeType == null || mimeType.isEmpty()) {
+            // Guess from URL
+            String url = track.getUrl().toLowerCase();
+            if (url.endsWith(".srt")) {
+                mimeType = MimeTypes.APPLICATION_SUBRIP;
+            } else if (url.endsWith(".vtt")) {
+                mimeType = MimeTypes.TEXT_VTT;
+            } else if (url.endsWith(".ass") || url.endsWith(".ssa")) {
+                mimeType = MimeTypes.TEXT_SSA;
+            } else {
+                mimeType = MimeTypes.APPLICATION_SUBRIP; // Default
+            }
+        }
+        
+        MediaItem.SubtitleConfiguration subConfig = new MediaItem.SubtitleConfiguration.Builder(
+                Uri.parse(track.getUrl()))
+                .setMimeType(mimeType)
+                .setLanguage(track.getLanguageCode())
+                .setLabel(track.getLanguage() + (track.getAddonName() != null ? " (" + track.getAddonName() + ")" : ""))
+                .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+                .build();
+        
+        // Get current media item and add subtitle
+        MediaItem currentItem = player.getCurrentMediaItem();
+        if (currentItem != null && currentItem.localConfiguration != null) {
+            List<MediaItem.SubtitleConfiguration> subs = new ArrayList<>();
+            subs.add(subConfig);
+            
+            MediaItem newItem = currentItem.buildUpon()
+                    .setSubtitleConfigurations(subs)
+                    .build();
+            
+            long position = player.getCurrentPosition();
+            boolean wasPlaying = player.isPlaying();
+            
+            player.setMediaItem(newItem, position);
+            player.prepare();
+            if (wasPlaying) player.play();
+            
+            // Enable subtitle track
+            TrackSelectionParameters params = player.getTrackSelectionParameters()
+                    .buildUpon()
+                    .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+                    .build();
+            player.setTrackSelectionParameters(params);
+            
+            Utils.showToast(this, "Loaded: " + track.getLanguage());
+        }
+    }
+    
+    /**
+     * Select an embedded subtitle track
+     */
+    private void selectEmbeddedSubtitle(SubtitleTrack track) {
+        if (player == null) return;
+        
+        Tracks currentTracks = player.getCurrentTracks();
+        Integer embeddedIdx = track.getEmbeddedTrackIndex();
+        int targetIndex = (embeddedIdx != null) ? embeddedIdx : 0;
+        int index = 0;
+        
+        for (Tracks.Group trackGroup : currentTracks.getGroups()) {
+            if (trackGroup.getType() == C.TRACK_TYPE_TEXT) {
+                for (int i = 0; i < trackGroup.length; i++) {
+                    if (index == targetIndex) {
+                        TrackGroup mediaTrackGroup = trackGroup.getMediaTrackGroup();
+                        
+                        TrackSelectionParameters params = player.getTrackSelectionParameters()
+                                .buildUpon()
+                                .setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
+                                .setOverrideForType(
+                                        new TrackSelectionOverride(mediaTrackGroup, Collections.singletonList(i))
+                                )
+                                .build();
+                        player.setTrackSelectionParameters(params);
+                        Utils.showToast(this, "Selected: " + track.getLanguage());
+                        return;
+                    }
+                    index++;
+                }
+            }
+        }
     }
 
     /**
@@ -3238,6 +3456,21 @@ public class PlayerActivity extends Activity {
                 }
 
                 DebugLogger.INSTANCE.log("SkipData", "Final IDs - MAL: " + resolvedMalId + ", IMDB: " + resolvedImdbId);
+                
+                // DEBUG: Show IMDB ID status to user
+                final String debugImdb = resolvedImdbId;
+                final String debugShow = showName;
+                runOnUiThread(() -> {
+                    if (debugImdb != null && !debugImdb.isEmpty()) {
+                        Toast.makeText(PlayerActivity.this, 
+                            "🔍 IMDB: " + debugImdb + " (S" + season + "E" + episode + ")", 
+                            Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(PlayerActivity.this, 
+                            "⚠️ No IMDB ID found for: " + debugShow, 
+                            Toast.LENGTH_LONG).show();
+                    }
+                });
                 
                 // Store resolved IDs for submission use
                 currentImdbId = resolvedImdbId;

@@ -63,28 +63,38 @@ class SkipDBClient {
         // Clean IMDB ID
         val cleanImdb = if (imdbId.startsWith("tt")) imdbId else "tt$imdbId"
         
-        // Try 1: Exact match with absolute episode number
-        val searchId1 = "$cleanImdb:$episode"
-        DebugLogger.log(TAG, "  Trying format 1: $searchId1")
-        var entry = entries.find { it.episodeId == searchId1 }
-        
-        if (entry == null) {
-            // Try 2: Search by title pattern SxxExx
-            val seasonEpPattern = "S${season.toString().padStart(2, '0')}E${episode.toString().padStart(2, '0')}"
-            DebugLogger.log(TAG, "  Trying format 2: title contains '$seasonEpPattern'")
-            entry = entries.find { 
-                it.episodeId.startsWith(cleanImdb) && 
-                it.title?.contains(seasonEpPattern, ignoreCase = true) == true 
-            }
+        // PRIORITY 1: Season-aware title matching (most accurate!)
+        val seasonEpPattern = "S${season.toString().padStart(2, '0')}E${episode.toString().padStart(2, '0')}"
+        DebugLogger.log(TAG, "  Trying format 1 (season-aware): title contains '$seasonEpPattern'")
+        var entry = entries.find { 
+            it.episodeId.startsWith(cleanImdb) && 
+            it.title?.contains(seasonEpPattern, ignoreCase = true) == true 
         }
         
         if (entry == null) {
-            // Try 3: Just episode number starting with this IMDB
-            DebugLogger.log(TAG, "  Trying format 3: any match starting with $cleanImdb")
-            val matchingEntries = entries.filter { it.episodeId.startsWith(cleanImdb) }
-            DebugLogger.log(TAG, "    Found ${matchingEntries.size} entries for this show")
-            matchingEntries.take(5).forEach { e ->
-                DebugLogger.log(TAG, "      - ${e.episodeId}: ${e.title}")
+            // PRIORITY 2: Try with season:episode format
+            val searchId2 = "$cleanImdb:$season:$episode"
+            DebugLogger.log(TAG, "  Trying format 2: $searchId2")
+            entry = entries.find { it.episodeId == searchId2 }
+        }
+        
+        if (entry == null) {
+            // PRIORITY 3: Absolute episode number (LAST resort - may match wrong season)
+            val searchId3 = "$cleanImdb:$episode"
+            DebugLogger.log(TAG, "  Trying format 3 (absolute): $searchId3 - WARNING: may match wrong season!")
+            entry = entries.find { it.episodeId == searchId3 }
+            
+            if (entry != null) {
+                // Warn if the title suggests a different season
+                val titleSeason = entry.title?.let {
+                    val match = Regex("S(\\d+)E", RegexOption.IGNORE_CASE).find(it)
+                    match?.groupValues?.getOrNull(1)?.toIntOrNull()
+                }
+                if (titleSeason != null && titleSeason != season) {
+                    DebugLogger.log(TAG, "  ⚠️ WARNING: Found S${titleSeason} data but playing S${season}!")
+                    DebugLogger.log(TAG, "  ⚠️ Skipping this mismatched entry...")
+                    entry = null  // Reject mismatched season data
+                }
             }
         }
         
@@ -94,7 +104,7 @@ class SkipDBClient {
             return entry.start to entry.end
         }
         
-        DebugLogger.log(TAG, "  ✗ No match found")
+        DebugLogger.log(TAG, "  ✗ No match found for S${season}E${episode}")
         return null
     }
 

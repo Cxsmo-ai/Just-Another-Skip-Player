@@ -139,6 +139,19 @@ public class SettingsActivity extends AppCompatActivity {
             // Trakt Handlers
             setupTraktPreferences();
 
+            // DISABLED: Subtitle Addons (reverted to original)
+            // Preference subtitleAddonsPref = findPreference("subtitleAddons");
+            // if (subtitleAddonsPref != null) {
+            //     subtitleAddonsPref.setOnPreferenceClickListener(preference -> {
+            //         android.content.Intent intent = new android.content.Intent(
+            //             requireContext(), 
+            //             com.brouken.player.ui.subtitle.SubtitleAddonsActivity.class
+            //         );
+            //         startActivity(intent);
+            //         return true;
+            //     });
+            // }
+
             // About Section Handlers
             setupAboutPreferences();
         }

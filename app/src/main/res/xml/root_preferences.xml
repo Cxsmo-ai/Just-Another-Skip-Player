@@ -287,6 +287,14 @@
 
     <PreferenceCategory app:title="@string/pref_subtitle_header">
 
+        <!-- DISABLED: Subtitle Addons (reverted to original ExoPlayer subtitle selector)
+        <Preference
+            app:key="subtitleAddons"
+            app:title="Manage Subtitle Addons"
+            app:summary="Configure Stremio subtitle sources"
+            app:iconSpaceReserved="false"/>
+        -->
+
         <SwitchPreferenceCompat
             app:key="subtitleStyleEmbedded"
             app:defaultValue="true"

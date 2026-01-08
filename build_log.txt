@@ -1,0 +1,60 @@
+﻿To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :android-file-chooser:preBuild UP-TO-DATE
+> Task :android-file-chooser:preDebugBuild UP-TO-DATE
+> Task :android-file-chooser:generateDebugResValues UP-TO-DATE
+> Task :android-file-chooser:generateDebugResources UP-TO-DATE
+> Task :android-file-chooser:packageDebugResources UP-TO-DATE
+> Task :android-file-chooser:processDebugNavigationResources UP-TO-DATE
+> Task :android-file-chooser:parseDebugLocalResources UP-TO-DATE
+> Task :android-file-chooser:generateDebugRFile UP-TO-DATE
+> Task :android-file-chooser:javaPreCompileDebug UP-TO-DATE
+> Task :android-file-chooser:compileDebugJavaWithJavac UP-TO-DATE
+> Task :android-file-chooser:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preJaspLatestUniversalDebugBuild UP-TO-DATE
+> Task :app:generateJaspLatestUniversalDebugBuildConfig UP-TO-DATE
+> Task :android-file-chooser:compileDebugLibraryResources UP-TO-DATE
+> Task :android-file-chooser:writeDebugAarMetadata UP-TO-DATE
+> Task :doubletapplayerview:preBuild UP-TO-DATE
+> Task :doubletapplayerview:preDebugBuild UP-TO-DATE
+> Task :doubletapplayerview:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkJaspLatestUniversalDebugAarMetadata UP-TO-DATE
+> Task :doubletapplayerview:processDebugNavigationResources UP-TO-DATE
+> Task :app:processJaspLatestUniversalDebugNavigationResources UP-TO-DATE
+> Task :app:compileJaspLatestUniversalDebugNavigationResources UP-TO-DATE
+> Task :app:generateJaspLatestUniversalDebugResValues UP-TO-DATE
+> Task :doubletapplayerview:generateDebugResValues UP-TO-DATE
+> Task :doubletapplayerview:generateDebugResources UP-TO-DATE
+> Task :doubletapplayerview:packageDebugResources UP-TO-DATE
+> Task :app:mapJaspLatestUniversalDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateJaspLatestUniversalDebugResources UP-TO-DATE
+> Task :app:mergeJaspLatestUniversalDebugResources UP-TO-DATE
+> Task :app:createJaspLatestUniversalDebugCompatibleScreenManifests UP-TO-DATE
+> Task :android-file-chooser:extractDeepLinksDebug UP-TO-DATE
+> Task :android-file-chooser:processDebugManifest UP-TO-DATE
+> Task :app:extractDeepLinksJaspLatestUniversalDebug UP-TO-DATE
+> Task :doubletapplayerview:extractDeepLinksDebug UP-TO-DATE
+> Task :doubletapplayerview:processDebugManifest UP-TO-DATE
+> Task :app:processJaspLatestUniversalDebugMainManifest UP-TO-DATE
+> Task :app:processJaspLatestUniversalDebugManifest UP-TO-DATE
+> Task :app:processJaspLatestUniversalDebugManifestForPackage UP-TO-DATE
+> Task :doubletapplayerview:compileDebugLibraryResources UP-TO-DATE
+> Task :doubletapplayerview:parseDebugLocalResources UP-TO-DATE
+> Task :doubletapplayerview:generateDebugRFile UP-TO-DATE
+> Task :app:processJaspLatestUniversalDebugResources UP-TO-DATE
+> Task :doubletapplayerview:javaPreCompileDebug UP-TO-DATE
+> Task :doubletapplayerview:compileDebugJavaWithJavac NO-SOURCE
+> Task :doubletapplayerview:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:compileJaspLatestUniversalDebugKotlin UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///E:/Stremio%20RPC%20ATV/Player/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 13s
+40 actionable tasks: 40 up-to-date

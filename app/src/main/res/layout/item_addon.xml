@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Addon Logo -->
+    <ImageView
+        android:id="@+id/addon_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_corner_bg"
+        android:contentDescription="Addon logo" />
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <!-- Name row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/addon_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                tools:text="1." />
+
+            <TextView
+                android:id="@+id/addon_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="OpenSubtitles v3" />
+
+            <!-- Status indicator -->
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_check_circle"
+                android:tint="#4CAF50"
+                android:contentDescription="Status" />
+
+        </LinearLayout>
+
+        <!-- URL row -->
+        <TextView
+            android:id="@+id/addon_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#888888"
+            android:textSize="12sp"
+            android:ellipsize="middle"
+            android:maxLines="1"
+            tools:text="opensubtitles-v3.strem.io" />
+
+        <!-- Status row -->
+        <TextView
+            android:id="@+id/addon_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#666666"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:text="Last used: Today" />
+
+    </LinearLayout>
+
+    <!-- Enable/Disable toggle -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/addon_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp" />
+
+    <!-- Menu button -->
+    <ImageButton
+        android:id="@+id/btn_menu"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_more_vert"
+        android:tint="#888888"
+        android:contentDescription="More options" />
+
+</LinearLayout>
