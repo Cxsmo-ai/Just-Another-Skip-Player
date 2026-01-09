@@ -29,13 +29,6 @@ jobs:
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
-    - name: Get version from build.gradle
-      id: version
-      run: |
-        VERSION_NAME=$(grep -oP "versionName = ['\"]\\K[^'\"]+(?=['\"])" app/build.gradle | head -1)
-        echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_OUTPUT
-        echo "Version: $VERSION_NAME"
         
     - name: Build Original Universal Debug APK
       run: ./gradlew assembleOriginalLatestUniversalDebug
@@ -46,37 +39,29 @@ jobs:
     - name: Rename APKs
       run: |
         mkdir -p release-apks
-        cp app/build/outputs/apk/originalLatestUniversal/debug/*.apk release-apks/Just-Player-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk
-        cp app/build/outputs/apk/jaspLatestUniversal/debug/*.apk release-apks/JASP-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk
+        cp app/build/outputs/apk/originalLatestUniversal/debug/*.apk release-apks/Just-Player.apk
+        cp app/build/outputs/apk/jaspLatestUniversal/debug/*.apk release-apks/JASP.apk
         
     - name: Upload Original APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Just-Player-v${{ steps.version.outputs.VERSION_NAME }}
-        path: release-apks/Just-Player-*.apk
+        name: Just-Player
+        path: release-apks/Just-Player.apk
         
     - name: Upload JASP APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: JASP-v${{ steps.version.outputs.VERSION_NAME }}
-        path: release-apks/JASP-*.apk
+        name: JASP
+        path: release-apks/JASP.apk
         
-    - name: Get commit message
-      id: commit
-      run: |
-        COMMIT_MSG=$(git log -1 --pretty=%B)
-        echo "message<<EOF" >> $GITHUB_OUTPUT
-        echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-        
-    - name: Create Release
+    - name: Create/Update Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ steps.version.outputs.VERSION_NAME }}
-        name: "🎬 JASP v${{ steps.version.outputs.VERSION_NAME }}"
+        tag_name: v1.2
+        name: "🎬 JASP v1.2"
         body: |
-          # 🎬 Just Another Skip Player v${{ steps.version.outputs.VERSION_NAME }}
+          # 🎬 Just Another Skip Player v1.2
           
           ### 🔄 In-App Updater
           - **Automatic Update Checks** - App checks for updates on launch (configurable)
@@ -96,8 +81,8 @@ jobs:
           
           | APK | Description |
           |-----|-------------|
-          | **JASP-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk** | 💜 Purple icon + JASP branding |
-          | **Just-Player-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk** | 🟢 Classic Just Player branding (app compatibility) |
+          | **JASP.apk** | 💜 Purple icon + JASP branding |
+          | **Just-Player.apk** | 🟢 Classic Just Player branding (app compatibility) |
           
           > **Note:** Both versions have **identical features** - only the icon and name differ!
           > 
@@ -136,7 +121,7 @@ jobs:
             Made with ❤️ by <b>Cxsmo_AI</b>
           </p>
         files: |
-          release-apks/Just-Player-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk
-          release-apks/JASP-v${{ steps.version.outputs.VERSION_NAME }}-universal.apk
+          release-apks/Just-Player.apk
+          release-apks/JASP.apk
         draft: false
         prerelease: false
